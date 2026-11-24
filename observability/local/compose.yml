@@ -1,0 +1,34 @@
+name: pdms-monitoring
+
+services:
+  prometheus:
+    image: prom/prometheus:v3.11.3
+    container_name: pdms-prometheus
+    ports:
+      - '${PDMS_MONITORING_BIND:?Set the local monitoring bind address}:29090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+
+  grafana:
+    image: grafana/grafana:13.0.1
+    container_name: pdms-grafana
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION: 'true'
+    ports:
+      - '${PDMS_MONITORING_BIND:?Set the local monitoring bind address}:23000:3000'
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+
+networks:
+  default:
+    external: true
+    name: ${PDMS_NETWORK:?Set PDMS_NETWORK to the running PDMS stack network}
+
+volumes:
+  prometheus-data:
+  grafana-data:

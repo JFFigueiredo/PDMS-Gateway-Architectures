@@ -1,0 +1,7 @@
+{
+  "gateway_source_snapshot": "5f257b814f12acd5f9e4db3cf46e18e101baddb4",
+  "gateway_experiment_runtime": "83aa7d2abf7e7d6ab2a31539941d5155a251fcc9",
+  "backends_repository": "https://github.com/JFFigueiredo/PDMS_Architectures",
+  "backends_tag": "v2.0.0",
+  "backends_commit": "dd3ac688c38797ff2fe522b295196b02d88cf611"
+}

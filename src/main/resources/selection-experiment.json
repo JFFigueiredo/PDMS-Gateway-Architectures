@@ -1,0 +1,144 @@
+{
+  "defaultArchitecture": "monolith",
+  "warmupSeconds": 30,
+  "run": null,
+  "tuning": {
+    "tickMs": 1000,
+    "windowSeconds": 30,
+    "minSamples": 1,
+    "maxAgeMs": 15000,
+    "highP99Ms": 250,
+    "recoveryP99Ms": 200,
+    "breachTicks": 2,
+    "opportunityTicks": 3600,
+    "dwellMs": 0,
+    "maxUtilization": 0.85,
+    "improvementFraction": 0.2,
+    "improvementMs": 10,
+    "maxSwitches": 3,
+    "flapWindowMs": 600000,
+    "highErrorRatio": 0.05
+  },
+  "profiles": {
+    "monolith": {
+      "evidenceKind": "configured",
+      "provenance": "gateway-experiment/declared-example-not-calibrated",
+      "minRateRps": 0,
+      "maxRateRps": 100,
+      "capacityRps": 100,
+      "predictedP99Ms": 100
+    },
+    "microservices": {
+      "evidenceKind": "configured",
+      "provenance": "gateway-experiment/declared-example-not-calibrated",
+      "minRateRps": 0,
+      "maxRateRps": 100,
+      "capacityRps": 100,
+      "predictedP99Ms": 150
+    },
+    "microservices-async": {
+      "evidenceKind": "configured",
+      "provenance": "gateway-experiment/declared-example-not-calibrated",
+      "minRateRps": 0,
+      "maxRateRps": 100,
+      "capacityRps": 100,
+      "predictedP99Ms": 150
+    },
+    "faas": {
+      "evidenceKind": "configured",
+      "provenance": "gateway-experiment/declared-example-not-calibrated",
+      "minRateRps": 0,
+      "maxRateRps": 100,
+      "capacityRps": 100,
+      "predictedP99Ms": 150
+    },
+    "decentralized": {
+      "evidenceKind": "configured",
+      "provenance": "gateway-experiment/declared-example-not-calibrated",
+      "minRateRps": 0,
+      "maxRateRps": 100,
+      "capacityRps": 100,
+      "predictedP99Ms": 150
+    }
+  },
+  "cases": {
+    "T1": {
+      "expectedArchitecture": "faas",
+      "note": "Sustained delay on the initial HTTP path.",
+      "profiles": {
+        "monolith": {
+          "predictedP99Ms": 300
+        },
+        "faas": {
+          "predictedP99Ms": 80
+        }
+      },
+      "delayMs": 350
+    },
+    "T2": {
+      "expectedArchitecture": "microservices",
+      "note": "Concurrency bottleneck; adaptation uses measured queuing latency, not a synthetic arrival rate.",
+      "profiles": {
+        "monolith": {
+          "predictedP99Ms": 300
+        },
+        "microservices": {
+          "predictedP99Ms": 80
+        }
+      },
+      "delayMs": 100,
+      "maxInFlight": 1,
+      "queueCapacity": 1000,
+      "maxWaitMs": 30000
+    },
+    "T3": {
+      "expectedArchitecture": "microservices",
+      "note": "Business HTTP and health probes fail; management remains reachable.",
+      "profiles": {}
+    },
+    "T4": {
+      "expectedArchitecture": "decentralized",
+      "note": "Introduce a declared anchoring requirement; this does not prove on-chain confirmation.",
+      "profiles": {}
+    },
+    "T5": {
+      "startingArchitecture": "microservices-async",
+      "expectedArchitecture": "monolith",
+      "note": "Introduce a read-your-writes snapshot requirement.",
+      "profiles": {}
+    },
+    "T6": {
+      "expectedArchitecture": "monolith",
+      "note": "Pause publication of real observations while delaying the initial HTTP path.",
+      "profiles": {
+        "monolith": {
+          "predictedP99Ms": 300
+        },
+        "faas": {
+          "predictedP99Ms": 80
+        }
+      },
+      "delayMs": 350
+    },
+    "T7": {
+      "expectedArchitecture": "faas",
+      "note": "Introduce two short pulses, then sustained delay until shutdown; qualify timings in the pilot.",
+      "profiles": {
+        "monolith": {
+          "predictedP99Ms": 300
+        },
+        "faas": {
+          "predictedP99Ms": 80
+        }
+      },
+      "tuning": {
+        "windowSeconds": 1,
+        "breachTicks": 4
+      },
+      "delayMs": 350,
+      "pulseMs": 500,
+      "secondPulseAtMs": 4000,
+      "sustainedAtMs": 20000
+    }
+  }
+}

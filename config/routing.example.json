@@ -1,0 +1,21 @@
+{
+  "version": "routing/1",
+  "epoch": 0,
+  "active": "monolith",
+  "mode": "request",
+  "backends": {
+    "monolith": { "default": "http://vm-a1:8080" },
+    "microservices": {
+      "person": "http://vm-a2:8080",
+      "snapshot": "http://vm-a2:8081",
+      "consent": "http://vm-a2:8082"
+    },
+    "microservices-async": {
+      "person": "http://vm-a3:8080",
+      "snapshot": "http://vm-a3:8081",
+      "consent": "http://vm-a3:8082"
+    },
+    "faas": { "default": "http://vm-a4:8080" },
+    "decentralized": { "default": "http://vm-a5:8080" }
+  }
+}

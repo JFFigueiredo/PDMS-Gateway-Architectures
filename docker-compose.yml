@@ -1,0 +1,77 @@
+# PDMS gateway. Backends are separate deployments (PDMS/docker-compose.*.yml on their own VMs);
+# their addresses are in config/routing.json (copy config/routing.example.json and edit).
+#
+#   cp config/routing.example.json config/routing.json
+#   docker compose --env-file .env up -d --build
+#
+name: pdms-gateway
+
+services:
+  pdms-gateway:
+    image: pdms-gateway:0.1.0
+    build:
+      context: .
+      args:
+        VERSION: "0.1.0"
+        # Build with GIT_REVISION=$(git rev-parse --short HEAD) so that the run log names the code it ran.
+        REVISION: ${GIT_REVISION:-unknown}
+    container_name: pdms-gateway
+    init: true
+    ports:
+      - "${PDMS_GATEWAY_BIND:?Set the local Gateway bind address}:8080:8080"
+    environment:
+      PDMS_GATEWAY_ROUTING_FILE: /app/config/routing.json
+      PDMS_GATEWAY_LOG_DIR: /app/logs
+      PDMS_GATEWAY_RUN_ID: ${PDMS_GATEWAY_RUN_ID:-adhoc}
+      # Optional: the image digest of this deployment, recorded in the run log (an image cannot know its own digest).
+      PDMS_GATEWAY_IMAGE_DIGEST: ${PDMS_GATEWAY_IMAGE_DIGEST:-}
+      PDMS_GATEWAY_RESPONSE_TIMEOUT: ${PDMS_GATEWAY_RESPONSE_TIMEOUT:-60s}
+      PDMS_GATEWAY_ADMIN_TOKEN: ${PDMS_GATEWAY_ADMIN_TOKEN:?set PDMS_GATEWAY_ADMIN_TOKEN}
+      PDMS_OUTBOX_ADMIN_TOKEN: ${PDMS_OUTBOX_ADMIN_TOKEN:-}
+      PDMS_GATEWAY_OUTBOX_TIMEOUT: ${PDMS_GATEWAY_OUTBOX_TIMEOUT:-10s}
+      PDMS_GATEWAY_SELECTION_ALLOW_APPLY: ${PDMS_GATEWAY_SELECTION_ALLOW_APPLY:-false}
+      PDMS_GATEWAY_EXPERIMENT_FILE: ${PDMS_GATEWAY_EXPERIMENT_FILE:-classpath:selection-experiment.json}
+      PDMS_GATEWAY_EXPERIMENT_ENABLED: ${PDMS_GATEWAY_EXPERIMENT_ENABLED:-false}
+      PDMS_GATEWAY_FLYWAY_ENABLED: ${PDMS_GATEWAY_FLYWAY_ENABLED:-true}
+      PDMS_GATEWAY_FLYWAY_URL: ${PDMS_GATEWAY_FLYWAY_URL:-jdbc:postgresql://localhost:5432/pdms}
+      PDMS_GATEWAY_FLYWAY_USER: ${PDMS_GATEWAY_FLYWAY_USER:-pdms_user}
+      PDMS_GATEWAY_FLYWAY_PASSWORD: ${PDMS_GATEWAY_FLYWAY_PASSWORD:-}
+      PDMS_GATEWAY_RUNTIME_MANAGED: ${PDMS_GATEWAY_RUNTIME_MANAGED:-true}
+      PDMS_GATEWAY_RUNTIME_DRAIN_TIMEOUT: ${PDMS_GATEWAY_RUNTIME_DRAIN_TIMEOUT:-30s}
+      # Empty uses the JVM defaults.
+      JAVA_TOOL_OPTIONS: ${JAVA_TOOL_OPTIONS:-}
+      # Backend health probes and admission settings.
+      PDMS_GATEWAY_HEALTH_INTERVAL: ${PDMS_GATEWAY_HEALTH_INTERVAL:-2s}
+      PDMS_GATEWAY_HEALTH_TIMEOUT: ${PDMS_GATEWAY_HEALTH_TIMEOUT:-1s}
+      PDMS_GATEWAY_HEALTH_FAIL: ${PDMS_GATEWAY_HEALTH_FAIL:-3}
+      PDMS_GATEWAY_HEALTH_SUCCESS: ${PDMS_GATEWAY_HEALTH_SUCCESS:-2}
+      PDMS_GATEWAY_ADMISSION_MAX: ${PDMS_GATEWAY_ADMISSION_MAX:-200}
+      PDMS_GATEWAY_ADMISSION_QUEUE: ${PDMS_GATEWAY_ADMISSION_QUEUE:-200}
+      PDMS_GATEWAY_ADMISSION_WAIT: ${PDMS_GATEWAY_ADMISSION_WAIT:-2s}
+    volumes:
+      - ./config:/app/experiments:ro
+      - ${PDMS_GATEWAY_ROUTING_FILE_HOST:-./config/routing.json}:/app/config/routing.json:ro
+      - gateway-logs:/app/logs
+    # Hardening: nothing writable except the log volume and /tmp; no capabilities; no privilege gain.
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 512
+    # A restart would reset the routing epoch; measured runs must not restart the gateway.
+    restart: "no"
+    # Longer than the application shutdown phase (25 s) so the request log is flushed and closed with its end row.
+    stop_grace_period: 40s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+volumes:
+  # Named volume keeps the ownership of the image (uid 10001). Extract a run's evidence with:
+  #   docker run --rm --entrypoint cp -v pdms-gateway_gateway-logs:/logs:ro -v "$PWD:/out" pdms-gateway:0.1.0 -r /logs /out
+  gateway-logs:

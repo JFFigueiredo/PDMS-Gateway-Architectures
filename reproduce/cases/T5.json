@@ -1,0 +1,122 @@
+{
+  "arrival_seconds": 1020,
+  "case": "T5",
+  "drain_seconds": 60,
+  "gateway_plan": {
+    "cases": {
+      "T5": {
+        "expectedArchitecture": "monolith",
+        "note": "Introduce a read-your-writes snapshot requirement.",
+        "profiles": {},
+        "startingArchitecture": "microservices-async"
+      }
+    },
+    "defaultArchitecture": "monolith",
+    "profiles": {
+      "microservices-async": {
+        "capacityRps": 44,
+        "evidenceKind": "configured",
+        "maxRateRps": 44,
+        "minRateRps": 0,
+        "predictedP99Ms": 76.71128579999994,
+        "provenance": "E0 audit 7ac06b961e286dd8d9b72ccae5269b762710bd9aaa01e2c1478d09f42cf429cd; median Gateway p99 at 1 session/s, including observed errors; declared 44 rps policy bound; no sustainable capacity inferred"
+      },
+      "monolith": {
+        "capacityRps": 44,
+        "evidenceKind": "configured",
+        "maxRateRps": 44,
+        "minRateRps": 0,
+        "predictedP99Ms": 33.99735780999997,
+        "provenance": "E0 audit 7ac06b961e286dd8d9b72ccae5269b762710bd9aaa01e2c1478d09f42cf429cd; median Gateway p99 at 1 session/s, including observed errors; declared 44 rps policy bound; no sustainable capacity inferred"
+      }
+    },
+    "run": null,
+    "tuning": {
+      "breachTicks": 2,
+      "dwellMs": 0,
+      "flapWindowMs": 600000,
+      "highErrorRatio": 0.05,
+      "highP99Ms": 250,
+      "improvementFraction": 0.2,
+      "improvementMs": 10,
+      "maxAgeMs": 15000,
+      "maxSwitches": 3,
+      "maxUtilization": 0.85,
+      "minSamples": 1,
+      "opportunityTicks": 3600,
+      "recoveryP99Ms": 200,
+      "tickMs": 1000,
+      "windowSeconds": 30
+    },
+    "warmupSeconds": 60
+  },
+  "pairs": [
+    {
+      "arrival_seed": 955333077,
+      "order": [
+        "reference",
+        "adaptive"
+      ],
+      "pair": 1,
+      "payload_seed": 68036906
+    },
+    {
+      "arrival_seed": 1837780772,
+      "order": [
+        "adaptive",
+        "reference"
+      ],
+      "pair": 2,
+      "payload_seed": 625657878
+    },
+    {
+      "arrival_seed": 1373058869,
+      "order": [
+        "reference",
+        "adaptive"
+      ],
+      "pair": 3,
+      "payload_seed": 483013792
+    },
+    {
+      "arrival_seed": 223546069,
+      "order": [
+        "reference",
+        "adaptive"
+      ],
+      "pair": 4,
+      "payload_seed": 876450462
+    },
+    {
+      "arrival_seed": 529120697,
+      "order": [
+        "reference",
+        "adaptive"
+      ],
+      "pair": 5,
+      "payload_seed": 1167919771
+    }
+  ],
+  "phases": [
+    {
+      "end_s": 1020,
+      "label": "fixed-load",
+      "nominal_request_rate": 11.0,
+      "plan": "mix",
+      "request_rate": 11.0,
+      "session_rate": 1.0,
+      "start_s": 0
+    }
+  ],
+  "schedules": {
+    "mix": "rate(1/sec) random_arrivals(1020 sec) rate(1/sec) pause(60 sec)",
+    "read": "pause(1080 sec)",
+    "write": "pause(1080 sec)"
+  },
+  "selection_constraints": {
+    "starting_architecture": "microservices-async"
+  },
+  "sessions_per_second": 1.0,
+  "warmup_seconds": 60,
+  "workload": "mix"
+}

@@ -1,0 +1,33 @@
+# Development ledger for the decentralized backend. Set the backend checkout and public signer address locally.
+name: pdms-besu
+
+services:
+  besu:
+    build:
+      context: ${PDMS_ARCHITECTURES_DIR:?Set PDMS_ARCHITECTURES_DIR to the tagged backend checkout}/docker/besu
+    image: pdms-besu:24.3.3
+    container_name: pdms-decentralized-besu
+    ports:
+      - "${BESU_BIND:?Set the local Besu publish address}:8545:8545"
+      - "${BESU_BIND:?Set the local Besu publish address}:9545:9545"
+    command:
+      - --data-path=/opt/besu/data
+      - --network=dev
+      - --rpc-http-enabled=true
+      - --rpc-http-host=${BESU_LISTEN_ADDRESS:?Set the Besu container listen address}
+      - --rpc-http-port=8545
+      - --rpc-http-api=ETH,NET,WEB3,TXPOOL
+      - --host-allowlist=${BESU_HOST_ALLOWLIST:-localhost}
+      - --miner-enabled=true
+      - --miner-coinbase=${BESU_SIGNER_ADDRESS:?Set BESU_SIGNER_ADDRESS to your public signer address}
+      - --metrics-enabled=true
+      - --metrics-host=${BESU_LISTEN_ADDRESS:?Set the Besu container listen address}
+      - --metrics-port=9545
+    volumes:
+      - besu-data:/opt/besu/data
+    cpus: 1.8
+    mem_limit: 6144m
+    restart: "no"
+
+volumes:
+  besu-data:

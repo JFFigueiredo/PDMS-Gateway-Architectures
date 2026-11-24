@@ -1,0 +1,121 @@
+{
+  "arrival_seconds": 1020,
+  "case": "T4",
+  "drain_seconds": 60,
+  "gateway_plan": {
+    "cases": {
+      "T4": {
+        "expectedArchitecture": "decentralized",
+        "note": "Introduce a declared anchoring requirement; this does not prove on-chain confirmation.",
+        "profiles": {}
+      }
+    },
+    "defaultArchitecture": "monolith",
+    "profiles": {
+      "decentralized": {
+        "capacityRps": 44,
+        "evidenceKind": "configured",
+        "maxRateRps": 44,
+        "minRateRps": 0,
+        "predictedP99Ms": 35.79524592999998,
+        "provenance": "E0 audit 888d6b3f019d64e6c5c6e26e26d0d0fece44b13072820b6f9e78430c1e7a57fd; median Gateway p99 at 1 session/s, client timing only; declared 44 rps policy bound; no sustainable capacity inferred"
+      },
+      "monolith": {
+        "capacityRps": 44,
+        "evidenceKind": "configured",
+        "maxRateRps": 44,
+        "minRateRps": 0,
+        "predictedP99Ms": 33.99735780999997,
+        "provenance": "E0 audit 888d6b3f019d64e6c5c6e26e26d0d0fece44b13072820b6f9e78430c1e7a57fd; median Gateway p99 at 1 session/s, client timing only; declared 44 rps policy bound; no sustainable capacity inferred"
+      }
+    },
+    "run": null,
+    "tuning": {
+      "breachTicks": 2,
+      "dwellMs": 0,
+      "flapWindowMs": 600000,
+      "highErrorRatio": 0.05,
+      "highP99Ms": 250,
+      "improvementFraction": 0.2,
+      "improvementMs": 10,
+      "maxAgeMs": 15000,
+      "maxSwitches": 3,
+      "maxUtilization": 0.85,
+      "minSamples": 1,
+      "opportunityTicks": 3600,
+      "recoveryP99Ms": 200,
+      "tickMs": 1000,
+      "windowSeconds": 30
+    },
+    "warmupSeconds": 60
+  },
+  "pairs": [
+    {
+      "arrival_seed": 676570752,
+      "order": [
+        "adaptive",
+        "reference"
+      ],
+      "pair": 1,
+      "payload_seed": 972089372
+    },
+    {
+      "arrival_seed": 2022696048,
+      "order": [
+        "adaptive",
+        "reference"
+      ],
+      "pair": 2,
+      "payload_seed": 79426105
+    },
+    {
+      "arrival_seed": 389898091,
+      "order": [
+        "reference",
+        "adaptive"
+      ],
+      "pair": 3,
+      "payload_seed": 1436487323
+    },
+    {
+      "arrival_seed": 1642318509,
+      "order": [
+        "reference",
+        "adaptive"
+      ],
+      "pair": 4,
+      "payload_seed": 2093954419
+    },
+    {
+      "arrival_seed": 638496310,
+      "order": [
+        "adaptive",
+        "reference"
+      ],
+      "pair": 5,
+      "payload_seed": 2022751109
+    }
+  ],
+  "phases": [
+    {
+      "end_s": 1020,
+      "label": "fixed-load",
+      "nominal_request_rate": 2.75,
+      "plan": "mix",
+      "request_rate": 2.75,
+      "session_rate": 0.25,
+      "start_s": 0
+    }
+  ],
+  "schedules": {
+    "mix": "rate(0.25/sec) random_arrivals(1020 sec) rate(0.25/sec) pause(60 sec)",
+    "read": "pause(1080 sec)",
+    "write": "pause(1080 sec)"
+  },
+  "selection_constraints": {
+    "starting_architecture": "monolith"
+  },
+  "sessions_per_second": 0.25,
+  "warmup_seconds": 60,
+  "workload": "mix"
+}

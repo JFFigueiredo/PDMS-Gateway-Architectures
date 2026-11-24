@@ -1,0 +1,16 @@
+name: pdms-gateway-observer
+services:
+  observer:
+    image: pdms-gateway-observer:local
+    build: .
+    env_file: .env
+    ports: ["${PDMS_OBSERVER_BIND:?Set the local observer bind address}:9400:9400"]
+    mem_limit: 128m
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: "no"
+networks:
+  default:
+    external: true
+    name: ${PDMS_OBSERVER_NETWORK:-pdms-gateway_default}

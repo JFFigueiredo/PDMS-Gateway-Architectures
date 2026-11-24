@@ -1,0 +1,122 @@
+{
+  "arrival_seconds": 1020,
+  "case": "T1",
+  "drain_seconds": 60,
+  "gateway_plan": {
+    "cases": {
+      "T1": {
+        "delayMs": 350,
+        "expectedArchitecture": "faas",
+        "note": "Sustained delay on the initial HTTP path.",
+        "profiles": {}
+      }
+    },
+    "defaultArchitecture": "monolith",
+    "profiles": {
+      "faas": {
+        "capacityRps": 44,
+        "evidenceKind": "configured",
+        "maxRateRps": 44,
+        "minRateRps": 0,
+        "predictedP99Ms": 35.923723069999994,
+        "provenance": "E0 audit 9963af617b3b0c563991f9983a71b8e5d8161cf357f0aabb382c75055bc291a2; median Gateway p99 at 1 session/s + 0 ms modeled stimulus; 44 rps tested-load proxy"
+      },
+      "monolith": {
+        "capacityRps": 44,
+        "evidenceKind": "configured",
+        "maxRateRps": 44,
+        "minRateRps": 0,
+        "predictedP99Ms": 383.99735781,
+        "provenance": "E0 audit 9963af617b3b0c563991f9983a71b8e5d8161cf357f0aabb382c75055bc291a2; median Gateway p99 at 1 session/s + 350 ms modeled stimulus; 44 rps tested-load proxy"
+      }
+    },
+    "run": null,
+    "tuning": {
+      "breachTicks": 2,
+      "dwellMs": 0,
+      "flapWindowMs": 600000,
+      "highErrorRatio": 0.05,
+      "highP99Ms": 250,
+      "improvementFraction": 0.2,
+      "improvementMs": 10,
+      "maxAgeMs": 15000,
+      "maxSwitches": 3,
+      "maxUtilization": 0.85,
+      "minSamples": 1,
+      "opportunityTicks": 3600,
+      "recoveryP99Ms": 200,
+      "tickMs": 1000,
+      "windowSeconds": 30
+    },
+    "warmupSeconds": 60
+  },
+  "pairs": [
+    {
+      "arrival_seed": 1345292429,
+      "order": [
+        "adaptive",
+        "reference"
+      ],
+      "pair": 1,
+      "payload_seed": 825961198
+    },
+    {
+      "arrival_seed": 134012329,
+      "order": [
+        "adaptive",
+        "reference"
+      ],
+      "pair": 2,
+      "payload_seed": 1348635304
+    },
+    {
+      "arrival_seed": 1726957225,
+      "order": [
+        "reference",
+        "adaptive"
+      ],
+      "pair": 3,
+      "payload_seed": 37568964
+    },
+    {
+      "arrival_seed": 937912463,
+      "order": [
+        "adaptive",
+        "reference"
+      ],
+      "pair": 4,
+      "payload_seed": 1069239035
+    },
+    {
+      "arrival_seed": 487138867,
+      "order": [
+        "reference",
+        "adaptive"
+      ],
+      "pair": 5,
+      "payload_seed": 1356029552
+    }
+  ],
+  "phases": [
+    {
+      "end_s": 1020,
+      "label": "fixed-load",
+      "nominal_request_rate": 11,
+      "plan": "mix",
+      "request_rate": 11,
+      "session_rate": 1.0,
+      "start_s": 0
+    }
+  ],
+  "schedules": {
+    "mix": "rate(1/sec) random_arrivals(1020 sec) rate(1/sec) pause(60 sec)",
+    "read": "pause(1080 sec)",
+    "write": "pause(1080 sec)"
+  },
+  "selection_constraints": {
+    "starting_architecture": "monolith"
+  },
+  "sessions_per_second": 1,
+  "warmup_seconds": 60,
+  "workload": "mix"
+}

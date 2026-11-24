@@ -1,0 +1,129 @@
+{
+  "arrival_seconds": 1020,
+  "case": "T3",
+  "drain_seconds": 60,
+  "gateway_plan": {
+    "cases": {
+      "T3": {
+        "expectedArchitecture": "faas",
+        "note": "Business HTTP and health probes fail; management remains reachable.",
+        "profiles": {}
+      }
+    },
+    "defaultArchitecture": "monolith",
+    "profiles": {
+      "faas": {
+        "capacityRps": 44,
+        "evidenceKind": "configured",
+        "maxRateRps": 44,
+        "minRateRps": 0,
+        "predictedP99Ms": 35.923723069999994,
+        "provenance": "E0 audit 30d20a681f69db5d57a87621e7858182d97a9311c863d60ff57ffa1cd28e80f1; median Gateway p99 at 1 session/s; 44 rps tested-load proxy, no capacity maximum inferred"
+      },
+      "microservices": {
+        "capacityRps": 44,
+        "evidenceKind": "configured",
+        "maxRateRps": 44,
+        "minRateRps": 0,
+        "predictedP99Ms": 105.36937810999984,
+        "provenance": "E0 audit 30d20a681f69db5d57a87621e7858182d97a9311c863d60ff57ffa1cd28e80f1; median Gateway p99 at 1 session/s; 44 rps tested-load proxy, no capacity maximum inferred"
+      },
+      "monolith": {
+        "capacityRps": 44,
+        "evidenceKind": "configured",
+        "maxRateRps": 44,
+        "minRateRps": 0,
+        "predictedP99Ms": 33.99735780999997,
+        "provenance": "E0 audit 30d20a681f69db5d57a87621e7858182d97a9311c863d60ff57ffa1cd28e80f1; median Gateway p99 at 1 session/s; 44 rps tested-load proxy, no capacity maximum inferred"
+      }
+    },
+    "run": null,
+    "tuning": {
+      "breachTicks": 2,
+      "dwellMs": 0,
+      "flapWindowMs": 600000,
+      "highErrorRatio": 0.05,
+      "highP99Ms": 250,
+      "improvementFraction": 0.2,
+      "improvementMs": 10,
+      "maxAgeMs": 15000,
+      "maxSwitches": 3,
+      "maxUtilization": 0.85,
+      "minSamples": 1,
+      "opportunityTicks": 3600,
+      "recoveryP99Ms": 200,
+      "tickMs": 1000,
+      "windowSeconds": 30
+    },
+    "warmupSeconds": 60
+  },
+  "pairs": [
+    {
+      "arrival_seed": 1450235051,
+      "order": [
+        "adaptive",
+        "reference"
+      ],
+      "pair": 1,
+      "payload_seed": 2045029317
+    },
+    {
+      "arrival_seed": 95625237,
+      "order": [
+        "adaptive",
+        "reference"
+      ],
+      "pair": 2,
+      "payload_seed": 1443371667
+    },
+    {
+      "arrival_seed": 1884411024,
+      "order": [
+        "adaptive",
+        "reference"
+      ],
+      "pair": 3,
+      "payload_seed": 1301540336
+    },
+    {
+      "arrival_seed": 1051415980,
+      "order": [
+        "reference",
+        "adaptive"
+      ],
+      "pair": 4,
+      "payload_seed": 2022901599
+    },
+    {
+      "arrival_seed": 1631606428,
+      "order": [
+        "adaptive",
+        "reference"
+      ],
+      "pair": 5,
+      "payload_seed": 941280344
+    }
+  ],
+  "phases": [
+    {
+      "end_s": 1020,
+      "label": "fixed-load",
+      "nominal_request_rate": 11.0,
+      "plan": "mix",
+      "request_rate": 11.0,
+      "session_rate": 1.0,
+      "start_s": 0
+    }
+  ],
+  "schedules": {
+    "mix": "rate(1/sec) random_arrivals(1020 sec) rate(1/sec) pause(60 sec)",
+    "read": "pause(1080 sec)",
+    "write": "pause(1080 sec)"
+  },
+  "selection_constraints": {
+    "starting_architecture": "monolith"
+  },
+  "sessions_per_second": 1.0,
+  "warmup_seconds": 60,
+  "workload": "mix"
+}

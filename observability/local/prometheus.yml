@@ -1,0 +1,39 @@
+global:
+  scrape_interval: 5s
+  scrape_timeout: 4s
+
+scrape_configs:
+  - job_name: gateway
+    metrics_path: /gateway/actuator/prometheus
+    static_configs:
+      - targets: ['pdms-gateway:8080']
+
+  - job_name: backend
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['monolith:8080']
+        labels: {architecture: monolith, process: default}
+      - targets: ['decentralized:8080']
+        labels: {architecture: decentralized, process: default}
+      - targets: ['faas:8080']
+        labels: {architecture: faas, process: default}
+      - targets: ['ms-person:8080']
+        labels: {architecture: microservices, process: person}
+      - targets: ['ms-consent:8082']
+        labels: {architecture: microservices, process: consent}
+      - targets: ['ms-snapshot:8081']
+        labels: {architecture: microservices, process: snapshot}
+      - targets: ['msa-person:8080']
+        labels: {architecture: microservices-async, process: person}
+      - targets: ['msa-consent:8082']
+        labels: {architecture: microservices-async, process: consent}
+      - targets: ['msa-snapshot:8081']
+        labels: {architecture: microservices-async, process: snapshot}
+
+  - job_name: observer
+    static_configs:
+      - targets: ['observer:9400']
+
+  - job_name: besu
+    static_configs:
+      - targets: ['besu:9545']
